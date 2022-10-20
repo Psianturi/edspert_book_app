@@ -52,13 +52,14 @@ class _BookListPageState extends State<BookListPage> {
         :
 
         ListView.builder(
-          itemCount: 15, //bookList!.books!.length
+          itemCount: bookList!.books!.length,
             itemBuilder: (context, index) {
-          final currentBook = bookList!.books![index];
+          final currentBook = bookList!.books![index]; //
           return GestureDetector(
             onTap: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailBookPage(
-                isbn: currentBook.isbn13! ,)
+                isbn: currentBook.isbn13! ,
+              )
               ));
             },
             child: Row(

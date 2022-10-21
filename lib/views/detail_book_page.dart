@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:edspert_book_app/models/book_detail_response.dart';
+import 'package:edspert_book_app/models/book_list_response.dart';
 import 'package:edspert_book_app/views/imag_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -27,9 +28,26 @@ class _DetailBookPageState extends State<DetailBookPage> {
       final jsonBookDetail = jsonDecode(response.body);
       bookDetail = BookDetailResponse.fromJson(jsonBookDetail);
       setState(() {});
+      fetchSimilarBookApi(bookDetail!.title!);
     }
 
     // print(await http.read(Uri.parse('https://api.itbook.store/1.0/new/')));
+  }
+
+  BookListResponse? similarBook;
+
+  fetchSimilarBookApi(String title) async {
+    //print("ini Tes");
+    var url = Uri.parse('https://api.itbook.store/1.0/search/${title}');
+    var response = await http.get(url);
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final jsonBookDetail = jsonDecode(response.body);
+      similarBook = BookListResponse.fromJson(jsonBookDetail);
+      setState(() {});
+    }
   }
 
   @override
@@ -161,6 +179,39 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         // Text("Rating : " + bookDetail!.rating!),
                       ],
                     ),
+                    Divider(),
+                    similarBook == null
+                        ? CircularProgressIndicator()
+                        : Container(
+                            height: 180,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: similarBook!.books!.length,
+                              // physics: const NeverScrollableScrollPhysics(), //utk scroll kiri - kanan
+                              itemBuilder: (context, index) {
+                                final current = similarBook!.books![index];
+                                return Container(
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      Image.network(
+                                        current.image!,
+                                        height: 100,
+                                      ),
+                                      Text(
+                                        current.title!,
+                                        maxLines: 3,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          )
                   ],
                 ),
               ));

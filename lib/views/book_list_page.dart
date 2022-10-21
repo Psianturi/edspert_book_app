@@ -17,22 +17,19 @@ class _BookListPageState extends State<BookListPage> {
 
   fetchBookApi() async {
     var url = Uri.parse('https://api.itbook.store/1.0/new');
-    var response =
-        await http.get(url);
+    var response = await http.get(url);
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-    if (response.statusCode ==200 ) {
+    if (response.statusCode == 200) {
       final jsonBookList = jsonDecode(response.body);
       bookList = BookListResponse.fromJson(jsonBookList);
-      setState(() {
-
-      });
-
+      setState(() {});
     }
 
     // print(await http.read(Uri.parse('https://api.itbook.store/1.0/new/')));
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -47,47 +44,41 @@ class _BookListPageState extends State<BookListPage> {
         title: const Text('Book Catalogue'),
       ),
       body: Container(
-        child:bookList == null ?
-        const Center(child: CircularProgressIndicator())
-        :
-
-        ListView.builder(
-          itemCount: bookList!.books!.length,
-            itemBuilder: (context, index) {
-          final currentBook = bookList!.books![index]; //
-          return GestureDetector(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailBookPage(
-                isbn: currentBook.isbn13! ,
-              )
-              ));
-            },
-            child: Row(
-            children: [
-              Image.network(currentBook.image!, height: 100),
-              Expanded(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(currentBook.title!),
-                    Text(currentBook.subtitle!),
-                    Align (
-                      alignment: Alignment.topCenter,
-                      child: Text(currentBook.price!),
-                    )
-                  ],
-                ),
-              )
-              )
-            ],
-
-          )
-          );
-
-        })
-      ),
+          child: bookList == null
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  itemCount: bookList!.books!.length,
+                  itemBuilder: (context, index) {
+                    final currentBook = bookList!.books![index]; //
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => DetailBookPage(
+                                    isbn: currentBook.isbn13!,
+                                  )));
+                        },
+                        child: Row(
+                          children: [
+                            Image.network(currentBook.image!, height: 100),
+                            Expanded(
+                                child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(currentBook.title!),
+                                  Text(currentBook.subtitle!),
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(currentBook.price!),
+                                  )
+                                ],
+                              ),
+                            ))
+                          ],
+                        ));
+                  })),
     );
   }
 }

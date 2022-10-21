@@ -1,10 +1,12 @@
 import 'dart:convert';
+// import 'dart:html';
 
 import 'package:edspert_book_app/models/book_detail_response.dart';
 import 'package:edspert_book_app/models/book_list_response.dart';
 import 'package:edspert_book_app/views/imag_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailBookPage extends StatefulWidget {
   const DetailBookPage({Key? key, required this.isbn}) : super(key: key);
@@ -159,7 +161,14 @@ class _DetailBookPageState extends State<DetailBookPage> {
                           style: ElevatedButton.styleFrom(
                               // fixedSize: Size(double.infinity, 50)
                               ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            print(bookDetail!.url!);
+                            Uri uri = Uri.parse(bookDetail!.url!);
+                            try {} catch (e) {}
+                            await canLaunchUrl(uri)
+                                ? launchUrl(uri)
+                                : print('error');
+                          },
                           child: Text("BUY")),
                     ),
                     SizedBox(
